@@ -17,9 +17,17 @@ class RemoveDuplicatedService()
      *
      * @param request The request containing the input list of integers and the number n
      * @return A list of integers that appear n times or less in the input list
+     * @throws IllegalArgumentException If the input list is empty or the maximum occurrence count is negative.
+     * @throws NoDuplicatesFoundException If no duplicates are found in the input list.
      */
     fun removeDuplicated(request: RemoveDuplicatedRequest): List<Int>
     {
+
+        /**
+         * Validate the request before processing it
+         */
+        this.validatePayload(request)
+
         val frequencyMap = request.input.groupingBy { it }.eachCount()
         val result = frequencyMap.filterValues { it <= request.n }.keys.toList()
 
@@ -32,5 +40,21 @@ class RemoveDuplicatedService()
         }
         return result
     }
+
+    // region Private methods
+
+    /**
+     * Validates the request payload
+     *
+     * @param request The request to validate
+     * @throws IllegalArgumentException If the input list is empty or the maximum occurrence count is negative
+     */
+    private fun validatePayload(request: RemoveDuplicatedRequest)
+    {
+        require(request.input.isNotEmpty()) { "Input can't be empty" }
+        require(request.n >= 0) { "N must be positive" }
+    }
+
+    // endregion
 
 }

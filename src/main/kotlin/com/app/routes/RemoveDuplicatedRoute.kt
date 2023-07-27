@@ -54,7 +54,13 @@ class RemoveDuplicatedRoute : KoinComponent
                      */
                 } catch (e: NoDuplicatesFoundException)
                 {
-                    call.respond(HttpStatusCode(400, "No change were made"), e.message ?: "No change were made to the input list")
+                    call.respond(
+                        HttpStatusCode(400, "No change were made"),
+                        e.message ?: "No change were made to the input list"
+                    )
+                } catch (e: IllegalArgumentException)
+                {
+                    call.respond(HttpStatusCode(400, "Invalid payload"), e.message ?: "Invalid payload")
                 }
             }
         }
