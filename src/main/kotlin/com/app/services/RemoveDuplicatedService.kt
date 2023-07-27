@@ -2,11 +2,13 @@ package com.app.services
 
 import com.app.data.RemoveDuplicatedRequest
 import com.app.exceptions.NoDuplicatesFoundException
+import org.koin.core.annotation.Single
 
 /**
  * Created by Nicolas Gros - 27/07/2023
  */
-class RemoveDuplicatedService
+@Single
+class RemoveDuplicatedService()
 {
 
     /**

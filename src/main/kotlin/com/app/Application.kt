@@ -1,6 +1,6 @@
 package com.app
 
-import com.app.routes.removeDuplicatedInt
+import com.app.routes.RemoveDuplicatedRoute
 import com.app.services.RemoveDuplicatedService
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.serialization.jackson.*
@@ -8,8 +8,8 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import org.koin.dsl.module
+import org.koin.ktor.ext.get
 import org.koin.ktor.plugin.Koin
-import org.koin.logger.slf4jLogger
 
 
 /**
@@ -17,12 +17,10 @@ import org.koin.logger.slf4jLogger
  */
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-
 fun Application.module()
 {
     install(Koin)
     {
-        slf4jLogger()
         modules(appModule)
     }
 
@@ -33,11 +31,11 @@ fun Application.module()
         }
     }
 
-    // Route to duplicated service
-    val removeDuplicatedService = RemoveDuplicatedService()
+
     install(Routing)
     {
-        removeDuplicatedInt(removeDuplicatedService)
+        // Route to duplicated service
+        get<RemoveDuplicatedRoute>().removeDuplicated(this)
     }
 
 }
@@ -45,5 +43,5 @@ fun Application.module()
 
 val appModule = module {
     single<RemoveDuplicatedService> { RemoveDuplicatedService() }
-    single { }
+    single<RemoveDuplicatedRoute> { RemoveDuplicatedRoute(get()) }
 }
