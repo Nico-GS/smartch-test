@@ -14,6 +14,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by Nicolas Gros - 27/07/2023
@@ -22,10 +24,14 @@ import org.koin.core.annotation.Module
  */
 @Module
 @ComponentScan
-class RemoveDuplicatedRoute(
-    private var service: RemoveDuplicatedService
-)
+class RemoveDuplicatedRoute : KoinComponent
 {
+
+    // region Injection
+
+    private val duplicatedService: RemoveDuplicatedService by inject()
+
+    // endregion
 
     fun removeDuplicated(routing: Routing)
     {
@@ -39,7 +45,7 @@ class RemoveDuplicatedRoute(
                 try
                 {
                     // Call the service and get the result
-                    val result = service.removeDuplicated(request)
+                    val result = duplicatedService.removeDuplicated(request)
                     LOGGER.info("Result : $result")
                     call.respondWithJson(RemoveDuplicatedResponse(result))
 
@@ -48,7 +54,7 @@ class RemoveDuplicatedRoute(
                      */
                 } catch (e: NoDuplicatesFoundException)
                 {
-                    call.respond(HttpStatusCode.BadRequest, e.message ?: "No change were made to the input list")
+                    call.respond(HttpStatusCode(400, "No change were made"), e.message ?: "No change were made to the input list")
                 }
             }
         }

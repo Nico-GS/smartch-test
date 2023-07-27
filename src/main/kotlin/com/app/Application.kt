@@ -43,5 +43,5 @@ fun Application.module()
 
 val appModule = module {
     single<RemoveDuplicatedService> { RemoveDuplicatedService() }
-    single<RemoveDuplicatedRoute> { RemoveDuplicatedRoute(get()) }
+    single<RemoveDuplicatedRoute> { RemoveDuplicatedRoute() }
 }
